@@ -4,6 +4,8 @@
 
 #include <iostream>
 #include <vector>
+#include <map>
+#include <algorithm>
 #include "records.h"
 
 int main(){
@@ -23,12 +25,21 @@ int main(){
 
     std::cout << "Enter a student ID: " << std::flush;
     std::cin >> id;
-
+    
     // Calculate the GPA for the selected student.
-    // Write your code here
+    std::map<char, int> letter_to_points = {{'A', 4}, {'B', 3}, {'C', 2}, {'D', 1},{'F', 0}};
+    int total_credits = 0;
+    double total_points = 0.0;
+    for (auto grade: grades) {
+        if (grade.get_student_id() == id) {
+            int credits = find_if(courses.begin(), courses.end(), [&](const auto& course){return course.get_id() == grade.get_course_id();})->get_credits();
+            total_points += letter_to_points[grade.get_grade()]*credits;
+            total_credits += credits;
+        }
+    }
+    GPA = total_points / total_credits;
 
-    std::string student_str;
-    student_str = students[0].get_name(); // Change this to the selected student's name
+    std::string student_str = std::find_if(students.begin(), students.end(),  [&](const auto& student){ return student.get_id() == id; })->get_name();
 
     std::cout << "The GPA for " << student_str << " is " << GPA << std::endl;
     
