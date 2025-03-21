@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "records.h"
 
 Student::Student(int the_id, std::string the_name){
@@ -76,6 +78,28 @@ std::string StudentRecords::get_student_name(int sid) const{
     while (i < students.size() && students[i].get_id() != sid)
         i++;
     return students[i].get_name();
+}
+
+
+std::string StudentRecords::get_course_name(int course_id) {
+    for (Course& course: courses) {
+        if (course.get_id() == course_id) {
+            return course.get_name();
+        }
+    }
+    throw std::invalid_argument("Couldn't find course name");
+}
+
+void StudentRecords::report_card(int student_id) {
+    std::cout << "Report card: " << get_student_name(student_id) << std::endl;
+
+    for (Grade& g: grades) {
+        if (g.get_student_id() == student_id) {
+            std::cout << get_course_name(g.get_course_id()) << ": " << g.get_grade() << std::endl;
+        }
+    }
+
+    std::cout << "GPA: " << get_GPA(student_id) << std::endl;
 }
 
 unsigned char StudentRecords::get_course_credits(int cid) const{
